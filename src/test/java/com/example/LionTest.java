@@ -1,18 +1,31 @@
 package com.example;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static com.constants.TestData.EXPECTED_FOOD_FELINE;
+import static com.constants.TestData.EXPECTED_LION_ANIMAL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Parameterized.class)
 public class LionTest {
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Mock
+    Feline feline;
 
     @Parameterized.Parameter
     public String sex;
@@ -33,7 +46,6 @@ public class LionTest {
 
     @Test
     public void doesHaveMane() throws Exception {
-        Feline feline = new Feline();
         Lion lion = new Lion(sex, feline);
         assertThat("Пол не соответствует",
                 lion.doesHaveMane(), is(expectedMane));
@@ -41,16 +53,16 @@ public class LionTest {
 
     @Test
     public void getKittens() throws Exception {
-        Feline feline = new Feline();
         Lion lion = new Lion(sex, feline);
+        Mockito.when(feline.getKittens()).thenReturn(1);
         assertThat("Количество не соответствует",
                 lion.getKittens(), is(expectedKittens));
     }
 
     @Test
     public void getFood() throws Exception {
-        Feline feline = new Feline();
         Lion lion = new Lion(sex, feline);
+        Mockito.when(feline.getFood(EXPECTED_LION_ANIMAL)).thenReturn(EXPECTED_FOOD_FELINE);
         assertThat("Лев питается иначе",
                 lion.getFood(), is(EXPECTED_FOOD_FELINE));
     }
